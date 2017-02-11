@@ -6,7 +6,7 @@ essayer de mettre en place le maximum de briques, en fonction
 du temps restant. 
 
 Le but final sera d'avoir accès à des graphiques permettant 
-de visualiser vos logs, les manipuler, les filtrer, ... et 
+de visualiser vos logs, les manipuler, les filtrer... et 
 de vous alerter dès qu'une anomalie est détectée. 
 
 Si vous êtes en avance, n'hésitez pas à jeter un coup d'oeil aux 
@@ -68,8 +68,7 @@ sera de découper la propriété `message` du document retourné par **Filebeat*
 * Dezippez l'archive téléchargée
 * Dans le répertoire de **Logstash**, créez un fichier `nightclazz.conf` dans lequel nous allons définir la configuration de l'outil. 
 
-Pour tester la configuration, nous allons faire un pipeline très simple. Pour chaque chaine de caractère insérée (**input**), nous 
-retournons le document générée dans la sortie standard (**output**).
+Pour tester la configuration, nous allons faire un pipeline très simple. Pour chaque chaine de caractère insérée (**input**), nous retournons le document généré dans la sortie standard (**output**).
 
 * Configurez **Logstash** pour utiliser l'input **stdin** et l'output **stdout**
 * Lancez **Logstash** via la commande suivante
@@ -78,23 +77,22 @@ retournons le document générée dans la sortie standard (**output**).
 ./bin/logstash -f nightclazz.conf
 ```
 
-Maintenant que Logstash est installé, nous allons pouvois le configurer afin de traiter les documents
-lus et envoyés par **filebeat**
+Maintenant que Logstash est installé, nous allons pouvoir le configurer afin de traiter les documents lus et envoyés par **filebeat**
 
 * Configurez **filebeat** pour envoyer le document au **logstash** que nous venons d'installer
-    * L'index dans lequel seront situés les logs est l'index **logs**
-* Configurez **logstash** pour pouvoir récupérer en entrée los logs retournées par **filebeat**
+* Configurez **logstash** pour pouvoir récupérer en entrée les logs retournées par **filebeat**
     * Pour cela, vous devez configurer l'input **beats**
 * Si nous relançons **filebeat** et **logstash**, vous devez normalement voir dans la console de **logstash**
 toutes les logs générées à chaque rafraichissement de l'application.
 
 Maintenant nous allons découper la propriété `message` de chaque document que nous recevons. 
 
-* Ajouter un filtre `grok` permettant de découper le message. pour tester le pattern `grok`, vous pouvez
-utiliser le site :  http://grokconstructor.appspot.com/do/match. Vous trouverez la liste des patterns groks 
-disponibles sur le github de **logstash** : https://github.com/elastic/logstash/blob/v1.4.2/patterns/grok-patterns
-* Synchroniser la propriété `@timestamp` avec la date présente dans la log. (utilisation du filtre `date`)
-* Supprimer la propriété `message` de chaque document.
+* Ajoutez un filtre `grok` permettant de découper le message. 
+
+Pour tester le pattern `grok`, vous pouvez utiliser le site :  http://grokconstructor.appspot.com/do/match. Vous trouverez la liste des patterns groks disponibles sur le github de **logstash** : https://github.com/elastic/logstash/blob/v1.4.2/patterns/grok-patterns
+
+* Synchronisez la propriété `@timestamp` avec la date présente dans la log. (utilisation du filtre `date`)
+* Supprimez la propriété `message` de chaque document.
 
 Avec cette configuration vous devriez voir dans la console **logstash**, une document **JSON** contenant
 les différentes propriétés que vous avez défini dans le filtre **grok**.
@@ -115,7 +113,7 @@ recherches et de pouvoir visualiser ces données dans Kibana.
 * Modifiez le fichier de configuration afin d'envoyer nos logs à notre noeud ElasticSearch
 * Via une requête REST, veuillez vous assurer que les documents sont bien reçus par ElasticSearch.
 
-Avant de faire d'autres reqquêtes, nous allons tout d'abord modifier le mapping de notre index, 
+Avant de faire d'autres requêtes, nous allons tout d'abord modifier le mapping de notre index, 
 afin d'optimiser les résultats envoyés par ElasticSearch. Veuillez respecter les contraintes suivantes : 
 
 * `auth` est une chaîne de caractères non analysée
@@ -137,9 +135,9 @@ Maintenant que le mapping est correctement configuré, nous pouvons à présent 
 * Modifiez le mapping de l'index afin de pouvoir exécutez la requête précedente
 * Retournez toutes les requêtes dont la propriété `durationMs` est supérieur à 50
 * Récupérez toutes les logs indexées depuis 5 minute
-* Pour chaque valeur de la propriété `request`, calculez le temps de moyen nécessaire pour envoyer la réponse. 
-* Retournez des statistiques sur le temps de réponses de chaque requête (proriété `durationMs`)
-* Créez un template afin de configurer pour vos futurs indexes **logstash-*** le mapping de vos documents
+* Pour chaque valeur de la propriété `request`, calculez le temps moyen nécessaire pour envoyer la réponse. 
+* Retournez des statistiques sur le temps de réponses de chaque requête (propriété `durationMs`)
+* Créez un template afin de configurer pour vos futurs indexes **logstash-** le mapping de vos documents
 
 A votre tour à présent d'imaginez d'autres requêtes...
 
@@ -158,14 +156,13 @@ Vous dezvez à présent avoir Kibana accessible à l'URL `localhost:4601`
 Dans Kibana, nous allons bien evidemment manipuler les logs indexées précédemment. Pour cela, veuillez
 configurer Kibana afin de pouvoir accéder aux logs de l'index **logstash-***
 
-* Découvrer l'onglet **Discover** 
+* Découvrez l'onglet **Discover** 
     * Affichez que les requêtes avec le code de retour 404
     * Affichez que les requêtes contenant la chaine de caractère `angular`
     * Dans le tableau, affichez la colonne `durationMs`, `request`, `response` et `bytes`
     * Sauvegardez cette nouvelle recherche.
 
-Vous pouvez à présent créer vos propres visualisations, la seule limite reste votre imagination. Voici des exemples de widget que vous vous 
-pouvez créer dans Kibana :
+Vous pouvez à présent créer vos propres visualisations, la seule limite reste votre imagination. Voici des exemples de widget que vous pouvez créer dans Kibana :
 
 * une visualisation de type métrique avec le nombre de logs indexées
 * un histogramme représentant le nombre de logs en fonction du temps
@@ -197,7 +194,7 @@ elastic/bin/elastic-plugin install x-pack
 kibana/bin/kibana-plugin install x-pack
 ```
 
-- Redémarrez **ElasticSearch** et **Kibana** (une connextion sera nécessaire. Login: elasticsearc, password: changeme)
+- Redémarrez **ElasticSearch** et **Kibana** (une connextion sera nécessaire. Login: elastic, password: changeme)
 
 - Créez une alerte permettant d'envoyer une requêtes vers **Maker** dès que le nombre de réponse 404 est supérieur à 5 dans
-les dernières 5mn.
+les 5 dernières minutes.
