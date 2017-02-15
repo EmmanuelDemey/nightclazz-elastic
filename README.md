@@ -1,5 +1,7 @@
 # NightClazz Elastic - Zenika Lille
 
+http://slides.com/emmanueldemey-1/deck-14#/
+
 Durant cette NightClazz, nous allons mettre en place une 
 infrastructure de gestion des logs (Apache). Nous allons
 essayer de mettre en place le maximum de briques, en fonction
